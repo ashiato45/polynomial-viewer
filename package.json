@@ -1,0 +1,25 @@
+{
+  "name": "polynomial-viewer",
+  "version": "1.0.0",
+  "description": "Pretty printer of polynomial that works on a webpage",
+  "main": "main.js",
+  "dependencies": {
+    "pegjs": "^0.10.0",
+    "requirejs": "^2.3.5",
+    "ts-pegjs": "^0.1.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashiato45/polynomial-viewer.git"
+  },
+  "author": "ashiato45",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ashiato45/polynomial-viewer/issues"
+  },
+  "homepage": "https://github.com/ashiato45/polynomial-viewer#readme"
+}
