@@ -69,7 +69,16 @@ function go(): void {
         (document.getElementById("txaOutput") as HTMLTextAreaElement).value =
             JSON.stringify(sampleOutput);
         var math = MathJax.Hub.getAllJax("divOutput")[0];
+
+        var linebreak: boolean = (document.getElementById("chkLinebreak") as HTMLInputElement).checked;
+        MathJax.Hub.Config({
+            CommonHTML: { linebreaks: { automatic: linebreak } },
+            "HTML-CSS": { linebreaks: { automatic: linebreak } },
+            SVG: { linebreaks: { automatic: linebreak } }
+        });
+        MathJax.Hub.Queue(["Text", math, "hoge"]);
         MathJax.Hub.Queue(["Text", math, toTeX(sampleOutput)]);
+        MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
     }
     catch (ex) {
