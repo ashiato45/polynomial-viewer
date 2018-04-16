@@ -19,21 +19,35 @@ interface Term {
     monomial: Exponential[];
 }
 
-function variableToString(v: Variable): string {
+
+class Options {
+    longname: boolean;
+    cutoff: number | null;
+    constructor(ln: boolean, c: number | null) {
+        this.longname = ln;
+        this.cutoff = c;
+    }
+}
+
+function variableToString(v: Variable, opt: Options): string {
+    var n = v.name;
+    if (opt.longname) {
+        n = `(\\texttt{${n}})`;
+    }
     if (v.sub != undefined) {
-        return `${v.name}_{${v.sub}}`;
+        return `${n}_{${v.sub}}`;
     } else {
-        return v.name;
+        return n;
     }
 
 }
 
-function exponentialToString(e: Exponential): string {
-    return `${variableToString(e.variable)}^{${e.sup}}`;
+function exponentialToString(e: Exponential, opt: Options): string {
+    return `${variableToString(e.variable, opt)}^{${e.sup}}`;
 }
 
-function monomialToString(m: Exponential[]): string {
-    return m.map(exponentialToString).join("");
+function monomialToString(m: Exponential[], opt: Options): string {
+    return m.map(x => exponentialToString(x, opt)).join("");
 }
 
 function showFloat(f: number): string {
@@ -46,16 +60,16 @@ function showFloat(f: number): string {
     }
 }
 
-function termToString(t: Term): string {
-    return `(${showFloat(t.coeff)})${monomialToString(t.monomial)}`;
+function termToString(t: Term, opt: Options): string {
+    return `(${showFloat(t.coeff)})${monomialToString(t.monomial, opt)}`;
 }
 
-function toTeX(ts: Term[]): string {
+function toTeX(ts: Term[], opt: Options): string {
     function reduceTerms(ac: string, v: Term): string {
         if (ac != "") {
             ac = ac.concat("+");
         }
-        ac = ac.concat(termToString(v));
+        ac = ac.concat(termToString(v, opt));
         return ac;
     }
 
@@ -65,6 +79,9 @@ function toTeX(ts: Term[]): string {
 function go(): void {
     var input: string = (document.getElementById("txaInput") as HTMLTextAreaElement).value;
     try {
+        var opt: Options = new Options(
+            (document.getElementById("chkLongName") as HTMLInputElement).checked,
+            null);
         const sampleOutput: Term[] = parse(input, undefined)[0];
         (document.getElementById("txaOutput") as HTMLTextAreaElement).value =
             JSON.stringify(sampleOutput);
@@ -77,7 +94,7 @@ function go(): void {
             SVG: { linebreaks: { automatic: linebreak } }
         });
         MathJax.Hub.Queue(["Text", math, "hoge"]);
-        MathJax.Hub.Queue(["Text", math, toTeX(sampleOutput)]);
+        MathJax.Hub.Queue(["Text", math, toTeX(sampleOutput, opt)]);
         MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 
     }
