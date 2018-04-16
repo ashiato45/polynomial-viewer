@@ -66,6 +66,9 @@ function termToString(t: Term, opt: Options): string {
 
 function toTeX(ts: Term[], opt: Options): string {
     function reduceTerms(ac: string, v: Term): string {
+        if (opt.cutoff != null && Math.abs(v.coeff) < 10 ** (opt.cutoff)) {
+            return ac;
+        }
         if (ac != "") {
             ac = ac.concat("+");
         }
@@ -79,9 +82,14 @@ function toTeX(ts: Term[], opt: Options): string {
 function go(): void {
     var input: string = (document.getElementById("txaInput") as HTMLTextAreaElement).value;
     try {
+        var cutoff: number | null = null;
+        if ((document.getElementById("chkCutoff") as HTMLInputElement).checked) {
+            cutoff = parseInt((document.getElementById("txtCutoff") as HTMLInputElement).value);
+        }
+
         var opt: Options = new Options(
             (document.getElementById("chkLongName") as HTMLInputElement).checked,
-            null);
+            cutoff);
         const sampleOutput: Term[] = parse(input, undefined)[0];
         (document.getElementById("txaOutput") as HTMLTextAreaElement).value =
             JSON.stringify(sampleOutput);
