@@ -43,7 +43,11 @@ function variableToString(v: Variable, opt: Options): string {
 }
 
 function exponentialToString(e: Exponential, opt: Options): string {
-    return `${variableToString(e.variable, opt)}^{${e.sup}}`;
+    if (e.sup == 1) {
+        return `${variableToString(e.variable, opt)}`;
+    } else {
+        return `${variableToString(e.variable, opt)}^{${e.sup}}`;
+    }
 }
 
 function monomialToString(m: Exponential[], opt: Options): string {
